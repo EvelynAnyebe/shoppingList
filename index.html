@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shopping list app</title>
-    <link rel="stylesheet" href="index.css" />
+    <title>Shopping list javascript app</title>
+    <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
@@ -16,7 +16,7 @@
     <main>
       <h1>My Shopping List</h1>
       <section id="add-item">
-        <form>
+        <form id="add-form">
           <input
             type="text"
             placeholder="Item title"
@@ -33,13 +33,12 @@
             required
           ></textarea>
           <span id="descriptionError" class="error"></span>
+          <button id="add-btn" class="btn" type="submit">+</button>
         </form>
-
-        <button id="add-btn" class="btn">+</button>
       </section>
       <section id="view-items"></section>
     </main>
 
-    <script src="index.js"></script>
+    <script src="task.js"></script>
   </body>
 </html>

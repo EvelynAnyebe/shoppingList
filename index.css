@@ -76,7 +76,6 @@ main {
   padding: 10px;
 
   border: 1px solid var(--grey-500);
-  box-sizing: border-box;
   border-radius: 10px;
 }
 
@@ -85,8 +84,8 @@ main {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-gap: 10px;
-  justify-content: space-around;
-  align-items: space-around;
+  justify-content: center;
+  align-items: center;
 }
 
 #add-item > form > input,
@@ -97,7 +96,6 @@ textarea {
 
   background: var(--grey-100);
   border: 1px solid var(--grey-500);
-  box-sizing: border-box;
   border-radius: 10px;
   outline: none;
 
@@ -119,6 +117,8 @@ textarea {
 }
 #add-btn {
   margin-top: 8px;
+  grid-column: span 2;
+  justify-self: center;
 }
 
 /* View section styles */
@@ -131,7 +131,6 @@ textarea {
   padding: 10px 25px;
 
   border: 1px solid var(--grey-500);
-  box-sizing: border-box;
   border-radius: 10px;
 }
 

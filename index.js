@@ -1,35 +1,35 @@
 const shoppingList = []; // Array of shopping items
 
+/*-----------------------------------------------------------
+Gettin required dom elements to use for the app
+-----------------------------------------------------------*/
 const titleInput = document.getElementById("title");
 const quantityInput = document.getElementById("quantity");
 const descriptionInput = document.getElementById("description");
-const addBtn = document.getElementById("add-btn");
-const shoppingListContainer = document.getElementById("view-items");
+const form = document.getElementById("add-form");
 const titleError = document.getElementById("titleError");
 const quantityError = document.getElementById("quantityError");
 const descriptionError = document.getElementById("descriptionError");
 
-function updateDom(id) {
-  for (let i = id; i < shoppingList.length; i++) {
-    addShoppingItemToDom(i);
+/*-----------------------------------------------------------
+Update Shopping List
+-----------------------------------------------------------*/
+function updateDom() {
+  const shoppingListContainer = document.getElementById("view-items");
+  shoppingListContainer.innerHTML = "";
+  const fragment = new DocumentFragment();
+  let i = 0;
+  for (let item of shoppingList) {
+    const divItemElement = createShoppingItem(item, i);
+    // Prepend item to the top of list
+    fragment.prepend(divItemElement);
+    i++;
   }
-}
-
-function deleteShoppingItemHandler(e) {
-  const parentElement = e.target.parentElement;
-  const parentElementId = parseInt(parentElement.id);
-  for (let i = parentElementId; i < shoppingList.length; i++) {
-    shoppingListContainer.removeChild(document.getElementById(i));
-  }
-  shoppingList.splice(parentElementId, 1);
-  updateDom(parentElementId);
+  shoppingListContainer.append(fragment);
 }
 
 // Add shopping item to dom
-function addShoppingItemToDom(itemId) {
-  // Get the item from shopping list array using the itemId parameter
-  itemObject = shoppingList[itemId];
-
+function createShoppingItem(item, itemId) {
   // Create item element
   const divItemElement = document.createElement("div");
   divItemElement.className = "item";
@@ -41,14 +41,10 @@ function addShoppingItemToDom(itemId) {
   // Create div container
   const divElement = document.createElement("div");
 
-  // Create h3, and 2 P elements
-  const h3Element = document.createElement("h3");
-  h3Element.innerText = itemObject.title;
-  const descElement = document.createElement("p");
-  descElement.innerText = itemObject.description;
-  const quantityElement = document.createElement("p");
-  quantityElement.className = "quantity";
-  quantityElement.innerText = `Quantity: x${itemObject.quantity}`;
+  // Add h3, and 2 P elements to divElement innerHTML
+  divElement.innerHTML = `<h3>${item.title}</h3>
+  <p>${item.description}</p>
+  <p class="quantity">Quantity: x${item.quantity}</p>`;
 
   // Create button
   const doneBtn = document.createElement("button");
@@ -59,31 +55,36 @@ function addShoppingItemToDom(itemId) {
   //Add event listener to button
   doneBtn.addEventListener("click", deleteShoppingItemHandler);
 
-  // Append elements h3 and p to parent
-  divElement.append(h3Element, descElement, quantityElement);
-
   // Append div element and done button to div item element
   divItemElement.append(divElement, doneBtn);
 
-  // Prepend item to the top of list
-  shoppingListContainer.prepend(divItemElement);
+  return divItemElement;
 }
 
-function resetForm() {
-  titleInput.value = "";
-  descriptionInput.value = "";
-  quantityInput.value = "";
+/*-----------------------------------------------------------
+Delete item handler function
+-----------------------------------------------------------*/
+function deleteShoppingItemHandler(e) {
+  const parentElement = e.target.parentElement;
+  const parentElementId = parseInt(parentElement.id);
+  shoppingList.splice(parentElementId, 1);
+  updateDom();
 }
 
-function addShoppingItemhandler() {
+/*-----------------------------------------------------------
+Add shopping list handler. 
+-----------------------------------------------------------*/
+function addShoppingItemhandler(e) {
   // Validate input values first
+  e.preventDefault();
+
   if (
     titleInput.value.trim().length < 3 ||
     !parseInt(quantityInput.value) ||
     descriptionInput.value.trim().length < 10
   ) {
     descriptionError.innerText = "All values are required";
-    return null;
+    return false;
   }
 
   const shoppingItem = {
@@ -95,18 +96,19 @@ function addShoppingItemhandler() {
   // Add item to array
   shoppingList.push(shoppingItem);
 
-  // Get the id of element to add to dom
-  itemId = shoppingList.length - 1;
-
   // Add item to DOM
-  addShoppingItemToDom(itemId);
-  resetForm();
+  updateDom();
 }
 
-addBtn.addEventListener("click", addShoppingItemhandler);
+form.addEventListener("submit", addShoppingItemhandler);
+
+/*-----------------------------------------------------------
+Input validation part
+-----------------------------------------------------------*/
 
 // Validate title input
 function titleHandler(e) {
+  e.preventDefault();
   if (titleInput.value.trim().length < 3) {
     e.preventDefault();
     titleError.innerText = "Title must be 3 letter above";
@@ -118,10 +120,10 @@ titleInput.addEventListener("keyup", titleHandler);
 
 // Handle quntity input
 function quantityHandler(e) {
+  e.preventDefault();
   // Checking for value here
   if (parseInt(quantityInput.value) != quantityInput.value) {
     e.preventDefault();
-    console.log(parseInt(quantityInput.value));
     quantityError.innerText = "A whole number expected";
   } else {
     quantityError.innerText = "";
@@ -131,6 +133,7 @@ quantityInput.addEventListener("keyup", quantityHandler);
 
 // Handle description input
 function descriptionHandler(e) {
+  e.preventDefault();
   if (descriptionInput.value.trim().length < 10) {
     e.preventDefault();
     descriptionError.innerText =
@@ -139,5 +142,4 @@ function descriptionHandler(e) {
     descriptionError.innerText = "";
   }
 }
-
 descriptionInput.addEventListener("keyup", descriptionHandler);
